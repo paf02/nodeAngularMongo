@@ -1,21 +1,3 @@
-// Init angular
-var MyApp = {};
-
-MyApp.config = {
-};
-
-MyApp.angular = angular.module('tomeFerreto', []);
-
-MyApp.angular.controller('IndexPageController', ['$scope', '$http', 'InitService', function ($scope, $http, InitService) {
-  'use strict';
-  
-  InitService.addEventListener('ready', function () {
-    // DOM ready
-    console.log('IndexPageController: ok, DOM ready');
-    
-  });
-}]);
-console.log('Angular Directive');    
 MyApp.angular.factory('InitService', ['$document', function ($document) {
   'use strict';
 

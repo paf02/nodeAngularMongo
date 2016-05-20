@@ -144,7 +144,7 @@ gulp.task('serve', ['hbs', 'styles', 'fonts'], () => {
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
-  gulp.watch('app/**/*.hbs', ['hbs']);
+  gulp.watch('app/**/*.html', ['hbs']);
   gulp.watch('app/styles/**/*.scss', ['styles']);
   gulp.watch('app/scripts/app/**/*.js', ['script']);
   gulp.watch('app/fonts/**/*', ['fonts']);
@@ -186,7 +186,7 @@ gulp.task('wiredep', () => {
     }))
     .pipe(gulp.dest('app/styles'));
 
-  gulp.src('app/**/*.hbs')
+  gulp.src('app/**/*.html')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)*\.\./
     }))
