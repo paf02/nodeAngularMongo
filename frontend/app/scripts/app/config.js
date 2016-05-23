@@ -4,4 +4,4 @@ var MyApp = {};
 MyApp.config = {
 };
 
-MyApp.angular = angular.module('tomeFerreto', []);
+MyApp.angular = angular.module('ecomApp', []);

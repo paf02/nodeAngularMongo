@@ -1,0 +1,70 @@
+<div class="footer-top-area">
+  <div class="zigzag-bottom"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <div class="footer-about-us">
+          <h2>e<span>Electronics</span></h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus vero quam laborum quas alias dolores blanditiis iusto consequatur, modi aliquid eveniet eligendi iure eaque ipsam iste, pariatur omnis sint! Suscipit, debitis, quisquam. Laborum commodi veritatis magni at?</p>
+          <div class="footer-social">
+            <a href="{{item.href}}" target="_blank" ng-repeat="item in social"><i class="fa" ng-class="item.icon"></i></a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 col-sm-6">
+        <div class="footer-menu">
+          <h2 class="footer-wid-title">User Navigation </h2>
+          <ul>
+            <li ng-repeat="item in footernav"><a href="{{item.href}}">{{item.text}}</a></li>
+          </ul>                        
+        </div>
+      </div>
+      
+      <div class="col-md-3 col-sm-6">
+        <div class="footer-menu">
+          <h2 class="footer-wid-title">Categories</h2>
+          <ul>
+            <li ng-repeat="item in categories"><a href="{{item.href}}">{{item.text}}</a></li>
+          </ul>                        
+        </div>
+      </div>
+      
+      <div class="col-md-3 col-sm-6">
+        <div class="footer-newsletter">
+          <h2 class="footer-wid-title">Newsletter</h2>
+          <p>Sign up to our newsletter and get exclusive deals you wont find anywhere else straight to your inbox!</p>
+          <div class="newsletter-form">
+            <form name="form" novalidate>
+              <input type="email" name="email" placeholder="Type your email" ng-model="email" required>
+              <small class="help-block" ng-show="submitted && form.email.$error.required"><span class="text-danger">Email required.</span></small>
+              <small class="help-block" ng-show="submitted && form.email.$error.email"><span class="text-danger">Invalid email.</span></small>
+              <input class="btn-block" type="submit" value="Subscribe" ng-click="submitted=true">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-bottom-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="copyright">
+          <p>&copy; 2015 eElectronics. All Rights Reserved. Coded with <i class="fa fa-heart"></i> by <a href="http://wpexpand.com" target="_blank">WP Expand</a></p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="footer-card-icon">
+          <i class="fa fa-cc-discover"></i>
+          <i class="fa fa-cc-mastercard"></i>
+          <i class="fa fa-cc-paypal"></i>
+          <i class="fa fa-cc-visa"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
