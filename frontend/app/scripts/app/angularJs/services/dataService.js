@@ -1,15 +1,27 @@
-MyApp.angular.factory('hexafy', ['$document', function ($document) {
+MyApp.angular.factory('dataService', ['$document', '$http', function ($document, $http) {
   'use strict';
 
   var pub = {};
-  
-  pub.getData = function () {
-    var t = {
-    	'name': 'pablo',
-    	'lastname': 'montero'
-    }
 
-    return t;
+  pub.getProduct = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getProduct
+    }).then(success, fail);
+  };
+
+  pub.getCurrency = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getCurrency
+    }).then(success, fail);
+  };
+
+  pub.getLanguage = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getLanguage
+    }).then(success, fail);
   };
 
   function onReady() {
