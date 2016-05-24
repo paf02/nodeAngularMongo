@@ -17,7 +17,8 @@ MyApp.angular
   	];
 
   	dataService.getCurrency(function(argument) {
-  		console.log(argument, "Currency");
+  		$scope.title = argument.data.title;
+  		console.log($scope.title, "Currency");
   	}, function() {
   		alert("Error");
   	});
@@ -29,7 +30,8 @@ MyApp.angular
 
 	
 	dataService.getLanguage(function(argument) {
-  		console.log(argument, "Language");
+  		$scope.title = argument.data.title;
+  		console.log($scope.title, "Language");
   	}, function() {
   		alert("Error");
   	});    
