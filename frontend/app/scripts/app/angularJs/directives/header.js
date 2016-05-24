@@ -1,6 +1,6 @@
 MyApp.angular
 .directive('headerDirective', function() {
-  var controller = ['$scope', '$location', function($scope, $location){
+  var controller = ['$scope', '$location', 'dataService', function($scope, $location, dataService){
   	$scope.login = true;
   	$scope.usernav = [
   		{text: "My Account", href: "account.html", icon: "fa-user"},
@@ -8,15 +8,31 @@ MyApp.angular
   		{text: "My Cart", href: "cart.html", icon: "fa-shopping-cart"}
   	];
 
+  	
+
   	$scope.currencies = [
   		{currency: "USD"},
   		{currency: "EUR"},
   		{currency: "COL"}
   	];
+
+  	dataService.getCurrency(function(argument) {
+  		console.log(argument, "Currency");
+  	}, function() {
+  		alert("Error");
+  	});
+
   	$scope.selectedCurrency = $scope.currencies[0].currency;
     $scope.currencySelection = function (item) {
         $scope.selectedCurrency = item;
     };
+
+	
+	dataService.getLanguage(function(argument) {
+  		console.log(argument, "Language");
+  	}, function() {
+  		alert("Error");
+  	});    
 
     $scope.languages = [
   		{language: "English"},
@@ -27,6 +43,8 @@ MyApp.angular
     $scope.languageSelection = function (lang) {
         $scope.selectedLanguage = lang;
     };
+
+    
 
     $scope.menu = [
   		{text: "Home", href: "index.html"},

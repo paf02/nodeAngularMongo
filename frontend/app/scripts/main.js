@@ -6,67 +6,22 @@ MyApp.config = {
 
 MyApp.angular = angular.module('ecomApp', []);
 
-MyApp.angular.controller('IndexPageController', ['$scope', '$http', 'InitService', 'hexafy', function ($scope, $http, InitService, hexafy) {
+
+MyApp.endPoints = {
+	getProduct: 'http://jsonplaceholder.typicode.com/posts/1',
+	getLanguage: 'http://jsonplaceholder.typicode.com/posts/2',
+	getCurrency: 'http://jsonplaceholder.typicode.com/posts/3'
+}
+
+MyApp.angular.controller('IndexPageController', ['$scope', '$http', 'InitService', function ($scope, $http, InitService) {
   'use strict';
   
   InitService.addEventListener('ready', function () {
     // DOM ready
     console.log('IndexPageController: ok, DOM ready');
-    
-  console.log(hexafy.getData());
   });
 
-}]);
-MyApp.angular.factory('InitService', ['$document', function ($document) {
-  'use strict';
-
-  var pub = {},
-    eventListeners = {
-      'ready' : []
-    };
-  
-  pub.addEventListener = function (eventName, listener) {
-    eventListeners[eventName].push(listener);
-  };
-
-  function onReady() {
-    var i;
-    for (i = 0; i < eventListeners.ready.length; i = i + 1) {
-      eventListeners.ready[i]();
-    }
-  }
-  
-  // Init
-  (function () {
-    $document.ready(function () {
-      onReady();
-    });
-  }());
-
-  return pub;
-  
-}]);
-MyApp.angular.factory('hexafy', ['$document', function ($document) {
-  'use strict';
-
-  var pub = {};
-  
-  pub.getData = function () {
-    var t = {
-    	'name': 'pablo',
-    	'lastname': 'montero'
-    }
-
-    return t;
-  };
-
-  function onReady() {
-    var i;
-    
-  }
-
-  return pub;
-}]);
+}]); 
 MyApp.angular
 .directive('footerDirective', function() {
   var controller = ['$scope', function($scope){
@@ -104,7 +59,7 @@ MyApp.angular
 });
 MyApp.angular
 .directive('headerDirective', function() {
-  var controller = ['$scope', '$location', function($scope, $location){
+  var controller = ['$scope', '$location', 'dataService', function($scope, $location, dataService){
   	$scope.login = true;
   	$scope.usernav = [
   		{text: "My Account", href: "account.html", icon: "fa-user"},
@@ -112,15 +67,31 @@ MyApp.angular
   		{text: "My Cart", href: "cart.html", icon: "fa-shopping-cart"}
   	];
 
+  	
+
   	$scope.currencies = [
   		{currency: "USD"},
   		{currency: "EUR"},
   		{currency: "COL"}
   	];
+
+  	dataService.getCurrency(function(argument) {
+  		console.log(argument, "Currency");
+  	}, function() {
+  		alert("Error");
+  	});
+
   	$scope.selectedCurrency = $scope.currencies[0].currency;
     $scope.currencySelection = function (item) {
         $scope.selectedCurrency = item;
     };
+
+	
+	dataService.getLanguage(function(argument) {
+  		console.log(argument, "Language");
+  	}, function() {
+  		alert("Error");
+  	});    
 
     $scope.languages = [
   		{language: "English"},
@@ -131,6 +102,8 @@ MyApp.angular
     $scope.languageSelection = function (lang) {
         $scope.selectedLanguage = lang;
     };
+
+    
 
     $scope.menu = [
   		{text: "Home", href: "index.html"},
@@ -155,3 +128,65 @@ MyApp.angular
   };
 });
 console.log('Angular Directive');    
+MyApp.angular.factory('InitService', ['$document', function ($document) {
+  'use strict';
+
+  var pub = {},
+    eventListeners = {
+      'ready' : []
+    };
+  
+  pub.addEventListener = function (eventName, listener) {
+    eventListeners[eventName].push(listener);
+  };
+
+  function onReady() {
+    var i;
+    for (i = 0; i < eventListeners.ready.length; i = i + 1) {
+      eventListeners.ready[i]();
+    }
+  }
+  
+  // Init
+  (function () {
+    $document.ready(function () {
+      onReady();
+    });
+  }());
+
+  return pub;
+  
+}]);
+MyApp.angular.factory('dataService', ['$document', '$http', function ($document, $http) {
+  'use strict';
+
+  var pub = {};
+
+  pub.getProduct = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getProduct
+    }).then(success, fail);
+  };
+
+  pub.getCurrency = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getCurrency
+    }).then(success, fail);
+  };
+
+  pub.getLanguage = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getLanguage
+    }).then(success, fail);
+  };
+
+  function onReady() {
+    var i;
+    
+  }
+
+  return pub;
+}]);
