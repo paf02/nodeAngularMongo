@@ -30,7 +30,7 @@ MyApp.angular.controller('productsController', ['$scope', 'dataService', functio
       {id: 4, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
       {id: 5, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
       {id: 6, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 7, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
+      {id: 7, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3}
   ];
 
   dataService.getProduct(function(argument) {
@@ -40,6 +40,69 @@ MyApp.angular.controller('productsController', ['$scope', 'dataService', functio
     alert("Error");
   });
 }]); 
+MyApp.angular.factory('InitService', ['$document', function ($document) {
+  'use strict';
+
+  var pub = {},
+    eventListeners = {
+      'ready' : []
+    };
+  
+  pub.addEventListener = function (eventName, listener) {
+    eventListeners[eventName].push(listener);
+  };
+
+  function onReady() {
+    var i;
+    for (i = 0; i < eventListeners.ready.length; i = i + 1) {
+      eventListeners.ready[i]();
+    }
+  }
+  
+  // Init
+  (function () {
+    $document.ready(function () {
+      onReady();
+    });
+  }());
+
+  return pub;
+  
+}]);
+MyApp.angular.factory('dataService', ['$document', '$http', function ($document, $http) {
+  'use strict';
+
+  var pub = {};
+
+  pub.getProduct = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getProduct
+    }).then(success, fail);
+  };
+
+  pub.getCurrency = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getCurrency
+    }).then(success, fail);
+  };
+
+  pub.getLanguage = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getLanguage
+    }).then(success, fail);
+  };
+
+  function onReady() {
+    var i;
+    
+  }
+
+  return pub;
+}]);
+
 MyApp.angular
 .directive('footerDirective', function() {
   var controller = ['$scope', function($scope){
@@ -148,65 +211,3 @@ MyApp.angular
   };
 });
 console.log('Angular Directive');    
-MyApp.angular.factory('InitService', ['$document', function ($document) {
-  'use strict';
-
-  var pub = {},
-    eventListeners = {
-      'ready' : []
-    };
-  
-  pub.addEventListener = function (eventName, listener) {
-    eventListeners[eventName].push(listener);
-  };
-
-  function onReady() {
-    var i;
-    for (i = 0; i < eventListeners.ready.length; i = i + 1) {
-      eventListeners.ready[i]();
-    }
-  }
-  
-  // Init
-  (function () {
-    $document.ready(function () {
-      onReady();
-    });
-  }());
-
-  return pub;
-  
-}]);
-MyApp.angular.factory('dataService', ['$document', '$http', function ($document, $http) {
-  'use strict';
-
-  var pub = {};
-
-  pub.getProduct = function(success, fail) {
-    $http({
-      method: 'GET',
-      url: MyApp.endPoints.getProduct
-    }).then(success, fail);
-  };
-
-  pub.getCurrency = function(success, fail) {
-    $http({
-      method: 'GET',
-      url: MyApp.endPoints.getCurrency
-    }).then(success, fail);
-  };
-
-  pub.getLanguage = function(success, fail) {
-    $http({
-      method: 'GET',
-      url: MyApp.endPoints.getLanguage
-    }).then(success, fail);
-  };
-
-  function onReady() {
-    var i;
-    
-  }
-
-  return pub;
-}]);
