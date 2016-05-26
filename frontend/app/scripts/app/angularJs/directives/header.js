@@ -1,6 +1,6 @@
 MyApp.angular
 .directive('headerDirective', function() {
-  var controller = ['$scope', '$location', 'dataService', function($scope, $location, dataService){
+  var controller = ['$scope', 'dataService', 'cartService', function($scope, dataService, cartService){
   	$scope.login = true;
   	$scope.usernav = [
   		{text: "My Account", href: "account.html", icon: "fa-user"},
@@ -20,7 +20,7 @@ MyApp.angular
   		$scope.title = argument.data.title;
   		console.log($scope.title, "Currency");
   	}, function() {
-  		alert("Error");
+  		// alert("Error");
   	});
 
   	$scope.selectedCurrency = $scope.currencies[0].currency;
@@ -28,19 +28,21 @@ MyApp.angular
         $scope.selectedCurrency = item;
     };
 
-	
-	dataService.getLanguage(function(argument) {
-  		$scope.title = argument.data.title;
-  		console.log($scope.title, "Language");
-  	}, function() {
-  		alert("Error");
-  	});    
+
 
     $scope.languages = [
   		{language: "English"},
   		{language: "French"},
   		{language: "Spanish"}
   	];
+
+	dataService.getLanguage(function(argument) {
+  		$scope.title = argument.data.title;
+  		console.log($scope.title, "Language");
+  	}, function() {
+  		// alert("Error");
+  	});    
+
   	$scope.selectedLanguage = $scope.languages[0].language;
     $scope.languageSelection = function (lang) {
         $scope.selectedLanguage = lang;
@@ -62,10 +64,33 @@ MyApp.angular
      	}
     };
 
+
+    // $scope.addToCart = dataService.updateItemInCart()
+
+    //cartService.updateItemInCart(10, $scope.products[0]);
+    // dataService.updateItemInCart(1, $scope.products[2]);
+
+    // console.log(dataService.getItemsInCart());
+
+    // console.log(dataService.getTotalPrice());
+
+    console.log($scope.cartInfo);
+    // dataService.updateItemInCart(4000, 2, $scope.products[1]);
+
+    // console.log(dataService.getItemsInCart());
+
+    // dataService.removeItemInCart($scope.products[1]);
+
+
+    // $scope.cart = dataService.cart;
+
   }]
 
   return {
-    restrict: 'E',
+    restrict: 'EA',
+    scope: {
+      cartInfo: '='
+    },
     controller: controller,
     templateUrl: 'partials/header.html'
   };

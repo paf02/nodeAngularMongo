@@ -39,8 +39,9 @@
 </head>
 <body>
 
-  <div ng-controller="IndexPageController">
-    <header-directive></header-directive>
+  <div ng-controller="productsController">
+  {{cart}}
+    <header-directive cartInfo="cart"></header-directive>
     
     <div class="slider-area">
       <div class="zigzag-bottom"></div>
@@ -165,12 +166,12 @@
       <div class="container">
         <div class="latest-product">
           <h2 class="section-title">Latest Products</h2>
-          <div class="product-carousel row" ng-controller="productsController">
-            <div class="single-product col-md-3 col-sm-4 col-xs-6" ng-repeat="item in products">
+          <div class="product-carousel row">
+            <div class="single-product col-md-3 col-sm-4 col-xs-6" ng-repeat="item in products track by $index">
               <div class="product-f-image">
                 <img src="{{item.img}}" alt="">
                 <div class="product-hover">
-                  <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                  <a href="#" class="add-to-cart-link" ng-click="addItem(item)"><i class="fa fa-shopping-cart"></i> Add to cart</a>
                   <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
                 </div>
               </div>
@@ -191,15 +192,31 @@
           <div class="col-md-12">
             <div class="brand-wrapper">
               <h2 class="section-title">Brands</h2>
-              <div class="brand-list">
-                <img src="images/services_logo__1.jpg" alt="">
-                <img src="images/services_logo__2.jpg" alt="">
-                <img src="images/services_logo__3.jpg" alt="">
-                <img src="images/services_logo__4.jpg" alt="">
-                <img src="images/services_logo__1.jpg" alt="">
-                <img src="images/services_logo__2.jpg" alt="">
-                <img src="images/services_logo__3.jpg" alt="">
-                <img src="images/services_logo__4.jpg" alt="">                            
+              <div class="brand-list row">
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__1.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__2.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__3.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__4.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__1.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__2.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                  <img src="images/services_logo__3.jpg" alt="">  
+                </div>
+                <div class="col-sm-4 col-md-3">
+                  <img src="images/services_logo__4.jpg" alt="">                              
+                </div>
               </div>
             </div>
           </div>
@@ -215,9 +232,9 @@
             <div class="single-product-widget">
               <h2 class="product-wid-title">Top Sellers</h2>
               <a href="" class="wid-view-more">View All</a>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-1.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
+              <div class="single-wid-product" ng-repeat="item in products | orderBy:'discount' | limitTo:3"">
+                <a href="single-product.html"><img src="{{item.img}}" alt="" class="product-thumb"></a>
+                <h2><a href="single-product.html">{{item.title}}</a></h2>
                 <div class="product-wid-rating">
                   <i class="fa fa-star"></i>
                   <i class="fa fa-star"></i>
@@ -226,35 +243,7 @@
                   <i class="fa fa-star"></i>
                 </div>
                 <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
-                </div>                            
-              </div>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-2.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Apple new mac book 2015</a></h2>
-                <div class="product-wid-rating">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
-                </div>                            
-              </div>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-3.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Apple new i phone 6</a></h2>
-                <div class="product-wid-rating">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
+                  <ins>{{item.price | currency}}</ins> <del>{{item.discount | currency}}</del>
                 </div>                            
               </div>
             </div>
@@ -263,9 +252,9 @@
             <div class="single-product-widget">
               <h2 class="product-wid-title">Recently Viewed</h2>
               <a href="#" class="wid-view-more">View All</a>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-4.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Sony playstation microsoft</a></h2>
+              <div class="single-wid-product" ng-repeat="item in products | limitTo:3">
+                <a href="single-product.html"><img src="{{item.img}}" alt="" class="product-thumb"></a>
+                <h2><a href="single-product.html">{{item.title}}</a></h2>
                 <div class="product-wid-rating">
                   <i class="fa fa-star"></i>
                   <i class="fa fa-star"></i>
@@ -274,35 +263,7 @@
                   <i class="fa fa-star"></i>
                 </div>
                 <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
-                </div>                            
-              </div>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-1.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Sony Smart Air Condtion</a></h2>
-                <div class="product-wid-rating">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
-                </div>                            
-              </div>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-2.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Samsung gallaxy note 4</a></h2>
-                <div class="product-wid-rating">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
+                  <ins>{{item.price | currency}}</ins> <del>{{item.discount | currency}}</del>
                 </div>                            
               </div>
             </div>
@@ -311,9 +272,9 @@
             <div class="single-product-widget">
               <h2 class="product-wid-title">Top New</h2>
               <a href="#" class="wid-view-more">View All</a>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-3.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Apple new i phone 6</a></h2>
+              <div class="single-wid-product" ng-repeat="item in products | orderBy:'-price' | limitTo:3">
+                <a href="single-product.html"><img src="{{item.img}}" alt="" class="product-thumb"></a>
+                <h2><a href="single-product.html">{{item.title}}</a></h2>
                 <div class="product-wid-rating">
                   <i class="fa fa-star"></i>
                   <i class="fa fa-star"></i>
@@ -322,35 +283,7 @@
                   <i class="fa fa-star"></i>
                 </div>
                 <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
-                </div>                            
-              </div>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-4.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Samsung gallaxy note 4</a></h2>
-                <div class="product-wid-rating">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
-                </div>                            
-              </div>
-              <div class="single-wid-product">
-                <a href="single-product.html"><img src="images/product-thumb-1.jpg" alt="" class="product-thumb"></a>
-                <h2><a href="single-product.html">Sony playstation microsoft</a></h2>
-                <div class="product-wid-rating">
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                  <i class="fa fa-star"></i>
-                </div>
-                <div class="product-wid-price">
-                  <ins>$400.00</ins> <del>$425.00</del>
+                  <ins>{{item.price | currency}}</ins> <del>{{item.discount | currency}}</del>
                 </div>                            
               </div>
             </div>
