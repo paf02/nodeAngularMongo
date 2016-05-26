@@ -22,87 +22,53 @@ MyApp.angular.controller('IndexPageController', ['$scope', '$http', 'InitService
   });
 
 }]); 
-MyApp.angular.controller('productsController', ['$scope', 'dataService', function ($scope, dataService) {
-  $scope.products = [
-      {id: 1, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 2, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 3, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 4, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 5, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 6, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
-      {id: 7, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3}
-  ];
+MyApp.angular.controller('productsController', ['$scope', 'InitService', 'dataService', function ($scope, InitService, dataService) {
+  
 
-  dataService.getProduct(function(argument) {
-    $scope.title = argument.data.title;
-    console.log($scope.title, "Products");
-  }, function() {
-    alert("Error");
+
+  InitService.addEventListener('ready', function () {
+    $scope.products = [
+      {id: 1, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3},
+      {id: 2, title: "HP Laptop", img: "/images/product-2.jpg", price: 780, discount: 10, rating: 3},
+      {id: 3, title: "Apple Iphone 6", img: "/images/product-3.jpg", price: 1100, discount: 5, rating: 3},
+      {id: 4, title: "Sony Play Station 4", img: "/images/product-4.jpg", price: 400, discount: 10, rating: 3},
+      {id: 5, title: "Sony Smart Phone 2016", img: "/images/product-5.jpg", price: 700, discount: 15, rating: 3},
+      {id: 6, title: "Samsung Smart Phone S6 Galaxy", img: "/images/product-6.jpg", price: 1000, discount: 5, rating: 3},
+      {id: 7, title: "Sony Smart TV 2015", img: "/images/product-1.jpg", price: 1800, discount: 15, rating: 3}
+    ];
+
+    $scope.cart = [];
+
+    dataService.getProduct(function(argument) {
+      $scope.title = argument.data.title;
+      console.log($scope.title, "Products");
+    }, function() {
+      // alert("Error");
+    });
+
+    $scope.totalPrice = function(item){
+      var total, itemsLength;
+      total = 0;
+      itemsLength = $scope.products.length;
+      for(count=0; count<itemsLength; count++){
+        total += $scope.products[count].price*1;
+      }
+      return {
+        total,
+        itemsLength
+      };
+    }
+
+    $scope.addItem = function(item) {
+      $scope.cart.push(item);
+      //$scope.totalPrice(item);
+    }
+
+    $scope.removeItem = function(index){
+      $scope.products.splice(index,1);
+    }
   });
 }]); 
-MyApp.angular.factory('InitService', ['$document', function ($document) {
-  'use strict';
-
-  var pub = {},
-    eventListeners = {
-      'ready' : []
-    };
-  
-  pub.addEventListener = function (eventName, listener) {
-    eventListeners[eventName].push(listener);
-  };
-
-  function onReady() {
-    var i;
-    for (i = 0; i < eventListeners.ready.length; i = i + 1) {
-      eventListeners.ready[i]();
-    }
-  }
-  
-  // Init
-  (function () {
-    $document.ready(function () {
-      onReady();
-    });
-  }());
-
-  return pub;
-  
-}]);
-MyApp.angular.factory('dataService', ['$document', '$http', function ($document, $http) {
-  'use strict';
-
-  var pub = {};
-
-  pub.getProduct = function(success, fail) {
-    $http({
-      method: 'GET',
-      url: MyApp.endPoints.getProduct
-    }).then(success, fail);
-  };
-
-  pub.getCurrency = function(success, fail) {
-    $http({
-      method: 'GET',
-      url: MyApp.endPoints.getCurrency
-    }).then(success, fail);
-  };
-
-  pub.getLanguage = function(success, fail) {
-    $http({
-      method: 'GET',
-      url: MyApp.endPoints.getLanguage
-    }).then(success, fail);
-  };
-
-  function onReady() {
-    var i;
-    
-  }
-
-  return pub;
-}]);
-
 MyApp.angular
 .directive('footerDirective', function() {
   var controller = ['$scope', function($scope){
@@ -140,7 +106,7 @@ MyApp.angular
 });
 MyApp.angular
 .directive('headerDirective', function() {
-  var controller = ['$scope', '$location', 'dataService', function($scope, $location, dataService){
+  var controller = ['$scope', 'dataService', 'cartService', function($scope, dataService, cartService){
   	$scope.login = true;
   	$scope.usernav = [
   		{text: "My Account", href: "account.html", icon: "fa-user"},
@@ -160,7 +126,7 @@ MyApp.angular
   		$scope.title = argument.data.title;
   		console.log($scope.title, "Currency");
   	}, function() {
-  		alert("Error");
+  		// alert("Error");
   	});
 
   	$scope.selectedCurrency = $scope.currencies[0].currency;
@@ -168,19 +134,21 @@ MyApp.angular
         $scope.selectedCurrency = item;
     };
 
-	
-	dataService.getLanguage(function(argument) {
-  		$scope.title = argument.data.title;
-  		console.log($scope.title, "Language");
-  	}, function() {
-  		alert("Error");
-  	});    
+
 
     $scope.languages = [
   		{language: "English"},
   		{language: "French"},
   		{language: "Spanish"}
   	];
+
+	dataService.getLanguage(function(argument) {
+  		$scope.title = argument.data.title;
+  		console.log($scope.title, "Language");
+  	}, function() {
+  		// alert("Error");
+  	});    
+
   	$scope.selectedLanguage = $scope.languages[0].language;
     $scope.languageSelection = function (lang) {
         $scope.selectedLanguage = lang;
@@ -202,12 +170,150 @@ MyApp.angular
      	}
     };
 
+
+    // $scope.addToCart = dataService.updateItemInCart()
+
+    //cartService.updateItemInCart(10, $scope.products[0]);
+    // dataService.updateItemInCart(1, $scope.products[2]);
+
+    // console.log(dataService.getItemsInCart());
+
+    // console.log(dataService.getTotalPrice());
+
+    console.log($scope.cartInfo);
+    // dataService.updateItemInCart(4000, 2, $scope.products[1]);
+
+    // console.log(dataService.getItemsInCart());
+
+    // dataService.removeItemInCart($scope.products[1]);
+
+
+    // $scope.cart = dataService.cart;
+
   }]
 
   return {
-    restrict: 'E',
+    restrict: 'EA',
+    scope: {
+      cartInfo: '='
+    },
     controller: controller,
     templateUrl: 'partials/header.html'
   };
 });
 console.log('Angular Directive');    
+MyApp.angular.factory('InitService', ['$document', function ($document) {
+  'use strict';
+
+  var pub = {},
+    eventListeners = {
+      'ready' : []
+    };
+  
+  pub.addEventListener = function (eventName, listener) {
+    eventListeners[eventName].push(listener);
+  };
+
+  function onReady() {
+    var i;
+    for (i = 0; i < eventListeners.ready.length; i = i + 1) {
+      eventListeners.ready[i]();
+    }
+  }
+  
+  // Init
+  (function () {
+    $document.ready(function () {
+      onReady();
+    });
+  }());
+
+  return pub;
+  
+}]);
+MyApp.angular.factory('cartService', ['$document', '$http', function ($document, $http) {
+  'use strict';
+
+  var pub = {};
+  var cart = [];
+
+  pub.getTotalPrice = function() {
+    var price = 0;
+    cart.map(function(obj) {
+      price += obj.items.price * obj.totalItems;
+    });
+
+    return price;
+  }
+
+  
+  var setItemInCart = function (totalItems, item) {
+    var data = {
+      totalItems: totalItems,
+      items: item,
+    }
+
+    cart.push(data);
+  };
+
+  pub.updateItemInCart = function (totalItems, item) {
+    var result = cart.filter(function( obj ) {
+      if (obj.items == item) {
+        obj.totalItems = totalItems;
+        return obj;
+      }
+    });
+
+    if (!result) {
+      setItemInCart(totalItems, item);
+    }
+  };
+
+  pub.removeItemInCart = function (item) {
+    var removeIndex = cart
+                        .map(function(obj) { return obj.items; })
+                        .indexOf(item);
+
+    cart.splice(removeIndex, 1);
+  };
+
+  pub.getItemsInCart = function() {
+    return cart;
+  }
+
+  return pub;
+}]);
+
+MyApp.angular.factory('dataService', ['$document', '$http', function ($document, $http) {
+  'use strict';
+
+  var pub = {};
+
+  pub.getProduct = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getProduct
+    }).then(success, fail);
+  };
+
+  pub.getCurrency = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getCurrency
+    }).then(success, fail);
+  };
+
+  pub.getLanguage = function(success, fail) {
+    $http({
+      method: 'GET',
+      url: MyApp.endPoints.getLanguage
+    }).then(success, fail);
+  };
+
+  function onReady() {
+    var i;
+    
+  }
+
+  return pub;
+}]);
